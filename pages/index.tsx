@@ -18,7 +18,11 @@ export default function QuoteForm() {
 
 const handlePartChange = (index: number, key: string, value: string | number) => {
   const newParts = [...formData.parts];
-  newParts[index][key as keyof typeof newParts[0]] = value;
+  if (key === 'part_price') {
+    newParts[index][key] = Number(value);
+  } else {
+    newParts[index][key] = String(value);
+  }
   setFormData({ ...formData, parts: newParts });
 };
 
