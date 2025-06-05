@@ -1,5 +1,5 @@
 
-import { Quote, Customer, Part } from '@prisma/client';
+import type { Quote, Customer, Part } from './types';
 import PDFDocument from 'pdfkit';
 import { NextApiResponse } from 'next';
 import fs from 'fs';
