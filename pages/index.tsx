@@ -50,6 +50,7 @@ export default function QuoteForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Submitting quote:', formData);
 
     const response = await fetch('/api/submit', {
       method: 'POST',
@@ -63,40 +64,44 @@ export default function QuoteForm() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Create Repair Quote</h1>
+      <h1 className="text-3xl font-bold mb-6">Create Repair Quote</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input className="border p-2 w-full" name="name" placeholder="Customer Name" onChange={handleChange} required />
-        <input className="border p-2 w-full" name="phone" placeholder="Phone" onChange={handleChange} required />
-        <input className="border p-2 w-full" name="email" placeholder="Email" onChange={handleChange} />
-        <input className="border p-2 w-full" name="vehicle" placeholder="Vehicle Info" onChange={handleChange} required />
+        <div className="grid grid-cols-2 gap-4">
+          <input className="border p-2 w-full" name="name" placeholder="Customer Name" onChange={handleChange} required />
+          <input className="border p-2 w-full" name="phone" placeholder="Phone" onChange={handleChange} required />
+          <input className="border p-2 w-full" name="email" placeholder="Email" onChange={handleChange} />
+          <input className="border p-2 w-full" name="vehicle" placeholder="Vehicle Info" onChange={handleChange} required />
+        </div>
         <textarea className="border p-2 w-full" name="jobDescription" placeholder="Job Description" onChange={handleChange} required />
         <input className="border p-2 w-full" name="laborCost" placeholder="Estimated Labor Cost" type="number" onChange={handleChange} required />
 
         <h2 className="text-xl font-semibold mt-4">Parts</h2>
-        {formData.parts.map((part, index) => (
-          <div key={index} className="flex gap-2 mb-2">
-            <input
-              className="border p-2 flex-1"
-              placeholder="Part Name"
-              value={part.part_name}
-              onChange={e => handlePartChange(index, 'part_name', e.target.value)}
-              required
-            />
-            <input
-              className="border p-2 w-32"
-              type="number"
-              placeholder="Price"
-              value={part.part_price.toString()}
-              onChange={e => handlePartChange(index, 'part_price', parseFloat(e.target.value))}
-              required
-            />
-          </div>
-        ))}
-        <button type="button" onClick={addPart} className="text-blue-600 underline">
+        <div className="grid gap-2">
+          {formData.parts.map((part, index) => (
+            <div key={index} className="flex gap-2">
+              <input
+                className="border p-2 flex-1"
+                placeholder="Part Name"
+                value={part.part_name}
+                onChange={e => handlePartChange(index, 'part_name', e.target.value)}
+                required
+              />
+              <input
+                className="border p-2 w-32"
+                type="number"
+                placeholder="Price"
+                value={part.part_price.toString()}
+                onChange={e => handlePartChange(index, 'part_price', parseFloat(e.target.value))}
+                required
+              />
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={addPart} className="text-blue-600 underline mt-2">
           + Add Another Part
         </button>
 
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded mt-4">
           Submit Quote
         </button>
       </form>
