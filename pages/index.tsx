@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 type Part = {
   part_name: string;
-  part_price: number;
+  part_price?: number;
 };
 
 type FormData = {
@@ -23,7 +23,7 @@ export default function QuoteForm() {
     vehicle: '',
     jobDescription: '',
     laborCost: '',
-    parts: [{ part_name: '', part_price: 0 }],
+    parts: [{ part_name: '', part_price: undefined }],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,7 +44,7 @@ export default function QuoteForm() {
   const addPart = () => {
     setFormData(prev => ({
       ...prev,
-      parts: [...prev.parts, { part_name: '', part_price: 0 }],
+      parts: [...prev.parts, { part_name: '', part_price: undefined }],
     }));
   };
 
@@ -65,17 +65,23 @@ export default function QuoteForm() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Create Repair Quote</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Row 1 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <input className="border p-2 w-full" name="name" placeholder="Customer Name" onChange={handleChange} required />
           <input className="border p-2 w-full" name="phone" placeholder="Phone" onChange={handleChange} required />
           <input className="border p-2 w-full" name="email" placeholder="Email" onChange={handleChange} />
-          <input className="border p-2 w-full" name="vehicle" placeholder="Vehicle Info" onChange={handleChange} required />
         </div>
-        <textarea className="border p-2 w-full" name="jobDescription" placeholder="Job Description" onChange={handleChange} required />
-        <input className="border p-2 w-full" name="laborCost" placeholder="Estimated Labor Cost" type="number" onChange={handleChange} required />
+        {/* Row 2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input className="border p-2 w-full" name="vehicle" placeholder="Vehicle Info" onChange={handleChange} required />
+          <input className="border p-2 w-full" name="laborCost" placeholder="Estimated Labor Cost" type="number" onChange={handleChange} />
+        </div>
+        {/* Row 3 */}
+        <textarea className="border p-2 w-full min-h-[100px]" name="jobDescription" placeholder="Job Description" onChange={handleChange} required />
 
-        <h2 className="text-xl font-semibold mt-4">Parts</h2>
+        {/* Parts Section */}
+        <h2 className="text-xl font-semibold">Parts</h2>
         <div className="grid gap-2">
           {formData.parts.map((part, index) => (
             <div key={index} className="flex gap-2">
@@ -84,15 +90,13 @@ export default function QuoteForm() {
                 placeholder="Part Name"
                 value={part.part_name}
                 onChange={e => handlePartChange(index, 'part_name', e.target.value)}
-                required
               />
               <input
                 className="border p-2 w-32"
                 type="number"
-                placeholder="Price"
-                value={part.part_price.toString()}
+                placeholder="Price (optional)"
+                value={part.part_price !== undefined ? part.part_price.toString() : ''}
                 onChange={e => handlePartChange(index, 'part_price', parseFloat(e.target.value))}
-                required
               />
             </div>
           ))}
