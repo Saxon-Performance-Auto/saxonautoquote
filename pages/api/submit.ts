@@ -11,16 +11,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { name, phone, email, vehicle, jobDescription, laborCost, parts } = req.body;
 
-    // Step 1: Find or create customer
-    let customer = await prisma.customer.findUnique({ where: { phone } });
+    console.log('Received data:', req.body);
 
+    let customer = await prisma.customer.findUnique({ where: { phone } });
     if (!customer) {
       customer = await prisma.customer.create({
         data: { name, phone, email, vehicle },
       });
     }
 
-    // Step 2: Create quote
     const quote = await prisma.quote.create({
       data: {
         customer_id: customer.id,
@@ -30,7 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    // Step 3: Add parts
     for (const part of parts) {
       await prisma.part.create({
         data: {
@@ -42,8 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     return res.status(200).json({ message: 'Quote created successfully', quoteId: quote.id });
-  } catch (error) {
-    console.error('Submit API error:', error);
+  } catch (err) {
+    console.error('Error in /api/submit:', err);
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 }
