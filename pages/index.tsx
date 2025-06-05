@@ -1,14 +1,29 @@
 import { useState } from 'react';
 
+type Part = {
+  part_name: string;
+  part_price: number;
+};
+
+type FormData = {
+  name: string;
+  phone: string;
+  email: string;
+  vehicle: string;
+  jobDescription: string;
+  laborCost: string;
+  parts: Part[];
+};
+
 export default function QuoteForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
     email: '',
     vehicle: '',
     jobDescription: '',
     laborCost: '',
-    parts: [{ part_name: '', part_price: '' }],
+    parts: [{ part_name: '', part_price: 0 }],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -16,20 +31,20 @@ export default function QuoteForm() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-const handlePartChange = (index: number, key: string, value: string | number) => {
-  const newParts = [...formData.parts];
-  if (key === 'part_price') {
-    newParts[index][key] = Number(value);
-  } else {
-    newParts[index][key] = String(value);
-  }
-  setFormData({ ...formData, parts: newParts });
-};
+  const handlePartChange = (index: number, key: keyof Part, value: string | number) => {
+    const newParts = [...formData.parts];
+    if (key === 'part_price') {
+      newParts[index][key] = Number(value);
+    } else {
+      newParts[index][key] = String(value);
+    }
+    setFormData({ ...formData, parts: newParts });
+  };
 
   const addPart = () => {
     setFormData(prev => ({
       ...prev,
-      parts: [...prev.parts, { part_name: '', part_price: '' }],
+      parts: [...prev.parts, { part_name: '', part_price: 0 }],
     }));
   };
 
@@ -71,7 +86,7 @@ const handlePartChange = (index: number, key: string, value: string | number) =>
               className="border p-2 w-32"
               type="number"
               placeholder="Price"
-              value={part.part_price}
+              value={part.part_price.toString()}
               onChange={e => handlePartChange(index, 'part_price', parseFloat(e.target.value))}
               required
             />
