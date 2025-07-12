@@ -1,10 +1,8 @@
-'use client';
-
-import { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 
 type Props = {
-  onChange: (signatureDataUrl: string) => void;
+  onChange: (dataUrl: string) => void;
 };
 
 export default function SignaturePad({ onChange }: Props) {
@@ -15,24 +13,41 @@ export default function SignaturePad({ onChange }: Props) {
     onChange('');
   };
 
-  const handleEnd = () => {
-    if (sigRef.current && !sigRef.current.isEmpty()) {
-      const dataUrl = sigRef.current.getTrimmedCanvas().toDataURL('image/png');
-      onChange(dataUrl);
-    }
-  };
+  // Attach onEnd manually to the canvas after mounting
+  useEffect(() => {
+    if (!sigRef.current) return;
+
+    const canvas = sigRef.current;
+    const handler = () => {
+      if (!canvas.isEmpty()) {
+        const data = canvas.getTrimmedCanvas().toDataURL('image/png');
+        onChange(data);
+      }
+    };
+
+    // Hacky attach to internal canvas event
+    const canvasEl = canvas.getCanvas();
+    canvasEl.addEventListener('mouseup', handler);
+    canvasEl.addEventListener('touchend', handler);
+
+    return () => {
+      canvasEl.removeEventListener('mouseup', handler);
+      canvasEl.removeEventListener('touchend', handler);
+    };
+  }, [onChange]);
 
   return (
-    <div>
+    <div className="space-y-2">
       <SignatureCanvas
         ref={sigRef}
-        onEnd={handleEnd}
-        canvasProps={{ className: 'border w-full h-32 rounded bg-white' }}
+        canvasProps={{
+          className: 'border w-full h-32 rounded bg-white'
+        }}
       />
       <button
         type="button"
         onClick={clear}
-        className="text-sm text-red-500 mt-2 underline"
+        className="text-sm text-red-600 underline"
       >
         Clear Signature
       </button>
