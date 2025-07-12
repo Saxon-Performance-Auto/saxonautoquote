@@ -1,4 +1,3 @@
-// pages/new/invoice.tsx
 export default function NewInvoicePage() {
-  return <div className="p-6 text-center text-xl">🚧 New Invoice Form Coming Soon</div>;
+  return <div className="p-10 text-center text-xl">🧾 New Invoice form coming soon.</div>;
 }

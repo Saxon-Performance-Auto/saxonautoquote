@@ -1,3 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@media print {
+  button, .no-print {
+    display: none !important;
+  }
+
+  .border,
+  .border * {
+    border: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+}

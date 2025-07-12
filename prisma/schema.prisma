@@ -1,4 +1,4 @@
-generator client {
+can you generator client {
   provider = "prisma-client-js"
 }
 
@@ -8,26 +8,26 @@ datasource db {
 }
 
 model Customer {
-  id         Int      @id @default(autoincrement())
-  name       String
-  phone      String
-  email      String?
-  vehicle    String
-  vin        String?
-  mileageIn  String?
-  mileageOut String?
-  quotes     Quote[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  phone       String
+  email       String?
+  vehicle     String
+  vin         String?    // NEW
+  mileageIn   String?    // NEW
+  mileageOut  String?    // NEW
+  quotes      Quote[]
 }
 
 model Quote {
   id             Int      @id @default(autoincrement())
   customerId     Int
   jobDescription String
+  laborCost      Float
+  totalCost      Float
   inspection     String?
   diagnostics    String?
   notes          String?
-  laborCost      Float
-  totalCost      Float
   signature      String?
   createdAt      DateTime @default(now())
   customer       Customer @relation(fields: [customerId], references: [id])
@@ -35,9 +35,9 @@ model Quote {
 }
 
 model Part {
-  id      Int    @id @default(autoincrement())
-  quoteId Int
-  name    String
-  price   Float
-  quote   Quote  @relation(fields: [quoteId], references: [id])
+  id       Int    @id @default(autoincrement())
+  quoteId  Int
+  name     String
+  price    Float
+  quote    Quote  @relation(fields: [quoteId], references: [id])
 }

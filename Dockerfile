@@ -1,22 +1,28 @@
-
-# Use Node.js base image
+# Use Node.js LTS image
 FROM node:18
+
+# Set production environment
+ENV NODE_ENV=production
 
 # Create app directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Install only production dependencies
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci --only=production
 
-# Copy remaining app files
+# Copy app files
 COPY . .
 
-# Build Next.js app
+# Build the Next.js app
 RUN npm run build
 
-# Expose Next.js port
+# Expose port
 EXPOSE 3000
 
-# Start script
-CMD ["npm", "start"]
+# Healthcheck for Fly.io
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:3000 || exit 1
+
+# Start with next start (optimized for production)
+CMD ["npx", "next", "start"]
