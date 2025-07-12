@@ -8,15 +8,17 @@
     "prisma": "prisma"
   },
   "dependencies": {
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^6.11.1",
     "next": "latest",
     "pdfkit": "^0.13.0",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-signature-canvas": "^1.1.0-alpha.2",
+    "signature_pad": "^5.0.10"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
-    "prisma": "^5.0.0",
+    "prisma": "^6.11.1",
     "typescript": "^5.0.0"
   }
 }

@@ -1,90 +1,79 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import SignaturePad from 'react-signature-canvas';
 
 export default function QuoteFormPage() {
-  const [repairs, setRepairs] = useState([{ description: '', parts: '', labor: '', refinish: '', sublet: '' }]);
+  const [customer, setCustomer] = useState({ name: '', phone: '', email: '', vehicle: '', vin: '', mileageIn: '', mileageOut: '' });
+  const [quote, setQuote] = useState({ jobDescription: '', laborCost: '', totalCost: '', inspection: '', diagnostics: '', notes: '', signature: '' });
+  const [parts, setParts] = useState([{ name: '', price: '' }]);
+  const sigPadRef = useRef<SignaturePad | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+  const handleCustomerChange = (e: any) => setCustomer({ ...customer, [e.target.name]: e.target.value });
+  const handleQuoteChange = (e: any) => setQuote({ ...quote, [e.target.name]: e.target.value });
+
+  const handlePartChange = (i: number, key: string, value: string) => {
+    const updated = [...parts];
+    updated[i][key as keyof typeof updated[0]] = value;
+    setParts(updated);
   };
 
-  const [form, setForm] = useState({
-    name: '', phone: '', date: '', street: '', city: '', color: '', make: '', model: '',
-    reg: '', serial: '', odometer: '', insurance: '', adjuster: '', estimator: '', notes: '', signature: ''
-  });
+  const addPartRow = () => setParts([...parts, { name: '', price: '' }]);
+  const clearSignature = () => sigPadRef.current?.clear();
 
-  const addRepairRow = () => setRepairs([...repairs, { description: '', parts: '', labor: '', refinish: '', sublet: '' }]);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const signature = sigPadRef.current?.isEmpty() ? '' : sigPadRef.current?.getTrimmedCanvas().toDataURL();
+
+    const payload = { customer, quote: { ...quote, signature }, parts };
+
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    alert(data.message);
+  };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-center">Estimate of Auto Repairs</h1>
+    <div className="max-w-5xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6 text-center">Auto Repair Quote</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {['name', 'phone', 'email', 'vehicle', 'vin', 'mileageIn', 'mileageOut'].map((field) => (
+            <input key={field} name={field} placeholder={field.replace(/([A-Z])/g, ' $1')} className="border p-2" onChange={handleCustomerChange} />
+          ))}
+        </div>
 
-      {/* Company & Customer Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input name="name" placeholder="Customer Name" className="border p-2" onChange={handleChange} />
-        <input name="phone" placeholder="Phone" className="border p-2" onChange={handleChange} />
-        <input name="date" placeholder="Date (MM/DD/YYYY)" className="border p-2" onChange={handleChange} />
-        <input name="street" placeholder="Street Address" className="border p-2" onChange={handleChange} />
-        <input name="city" placeholder="City" className="border p-2" onChange={handleChange} />
-        <input name="color" placeholder="Color" className="border p-2" onChange={handleChange} />
-        <input name="make" placeholder="Make" className="border p-2" onChange={handleChange} />
-        <input name="model" placeholder="Model" className="border p-2" onChange={handleChange} />
-        <input name="reg" placeholder="Registration #" className="border p-2" onChange={handleChange} />
-        <input name="serial" placeholder="Serial #" className="border p-2" onChange={handleChange} />
-        <input name="odometer" placeholder="Odometer" className="border p-2" onChange={handleChange} />
-        <input name="insurance" placeholder="Insurance Company" className="border p-2" onChange={handleChange} />
-        <input name="adjuster" placeholder="Adjuster Name" className="border p-2" onChange={handleChange} />
-        <input name="estimator" placeholder="Estimated By" className="border p-2" onChange={handleChange} />
-      </div>
+        <textarea name="jobDescription" placeholder="Job Description" className="border p-2 w-full min-h-[80px]" onChange={handleQuoteChange} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <textarea name="inspection" placeholder="Inspection Results" className="border p-2 min-h-[60px]" onChange={handleQuoteChange} />
+          <textarea name="diagnostics" placeholder="Diagnostic Summary" className="border p-2 min-h-[60px]" onChange={handleQuoteChange} />
+        </div>
+        <textarea name="notes" placeholder="Additional Notes" className="border p-2 w-full min-h-[60px]" onChange={handleQuoteChange} />
 
-      {/* Repair Grid */}
-      <div>
-        <h2 className="font-semibold">Repair Estimate</h2>
-        <table className="w-full border mt-2">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border p-2">Description</th>
-              <th className="border p-2">Parts</th>
-              <th className="border p-2">Labor</th>
-              <th className="border p-2">Refinish</th>
-              <th className="border p-2">Sublet</th>
-            </tr>
-          </thead>
-          <tbody>
-            {repairs.map((r, idx) => (
-              <tr key={idx}>
-                <td><input className="w-full border p-2" value={r.description} onChange={e => {
-                  const newList = [...repairs]; newList[idx].description = e.target.value; setRepairs(newList);
-                }} /></td>
-                <td><input className="w-full border p-2" value={r.parts} onChange={e => {
-                  const newList = [...repairs]; newList[idx].parts = e.target.value; setRepairs(newList);
-                }} /></td>
-                <td><input className="w-full border p-2" value={r.labor} onChange={e => {
-                  const newList = [...repairs]; newList[idx].labor = e.target.value; setRepairs(newList);
-                }} /></td>
-                <td><input className="w-full border p-2" value={r.refinish} onChange={e => {
-                  const newList = [...repairs]; newList[idx].refinish = e.target.value; setRepairs(newList);
-                }} /></td>
-                <td><input className="w-full border p-2" value={r.sublet} onChange={e => {
-                  const newList = [...repairs]; newList[idx].sublet = e.target.value; setRepairs(newList);
-                }} /></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button onClick={addRepairRow} className="mt-2 text-blue-600 underline">+ Add Another Row</button>
-      </div>
+        <h2 className="font-semibold mt-6 mb-2">Parts</h2>
+        {parts.map((part, i) => (
+          <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <input className="border p-2" placeholder="Part Name" value={part.name} onChange={e => handlePartChange(i, 'name', e.target.value)} />
+            <input className="border p-2" placeholder="Price" value={part.price} onChange={e => handlePartChange(i, 'price', e.target.value)} type="number" />
+          </div>
+        ))}
+        <button type="button" onClick={addPartRow} className="text-blue-600 underline">+ Add Part</button>
 
-      {/* Notes */}
-      <textarea name="notes" className="border w-full p-2 min-h-[100px]" placeholder="Additional notes..." onChange={handleChange}></textarea>
+        <div className="grid grid-cols-2 gap-4">
+          <input name="laborCost" placeholder="Labor Cost" className="border p-2" onChange={handleQuoteChange} />
+          <input name="totalCost" placeholder="Total Estimate" className="border p-2" onChange={handleQuoteChange} />
+        </div>
 
-      {/* Signature */}
-      <div className="grid grid-cols-2 gap-4">
-        <input name="signature" className="border p-2" placeholder="Customer Signature (typed name)" onChange={handleChange} />
-        <input name="date" className="border p-2" placeholder="Date" onChange={handleChange} />
-      </div>
+        <div className="my-4">
+          <p className="font-semibold mb-2">Customer Signature</p>
+          <SignaturePad ref={sigPadRef} canvasProps={{ className: "border w-full h-32" }} />
+          <button type="button" onClick={clearSignature} className="text-sm mt-2 text-red-500 underline">Clear Signature</button>
+        </div>
 
-      <button className="mt-6 bg-blue-600 text-white px-6 py-2 rounded">Submit Quote</button>
+        <button type="submit" className="bg-blue-700 text-white px-6 py-2 rounded">Submit Quote</button>
+      </form>
     </div>
   );
 }

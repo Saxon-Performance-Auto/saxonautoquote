@@ -1,47 +1,47 @@
 import { PrismaClient } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
 
   try {
-    const { name, phone, email, vehicle, jobDescription, laborCost, parts } = req.body;
+    const { customer, quote, parts } = req.body;
 
-    console.log('Received data:', req.body);
-
-    let customer = await prisma.customer.findUnique({ where: { phone } });
-    if (!customer) {
-      customer = await prisma.customer.create({
-        data: { name, phone, email, vehicle },
-      });
-    }
-
-    const quote = await prisma.quote.create({
+    const createdCustomer = await prisma.customer.create({
       data: {
-        customer_id: customer.id,
-        job_description: jobDescription,
-        labor_cost: parseFloat(laborCost),
-        total_cost: parts.reduce((sum: number, p: any) => sum + parseFloat(p.part_price), 0) + parseFloat(laborCost),
+        name: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        vehicle: customer.vehicle,
+        vin: customer.vin,
+        mileageIn: customer.mileageIn,
+        mileageOut: customer.mileageOut,
       },
     });
 
-    for (const part of parts) {
-      await prisma.part.create({
-        data: {
-          quote_id: quote.id,
-          part_name: part.part_name,
-          part_price: parseFloat(part.part_price),
+    const createdQuote = await prisma.quote.create({
+      data: {
+        customerId: createdCustomer.id,
+        jobDescription: quote.jobDescription,
+        inspection: quote.inspection,
+        diagnostics: quote.diagnostics,
+        notes: quote.notes,
+        laborCost: parseFloat(quote.laborCost || 0),
+        totalCost: parseFloat(quote.totalCost || 0),
+        signature: quote.signature,
+        parts: {
+          create: parts.map(p => ({
+            name: p.name,
+            price: parseFloat(p.price || 0),
+          })),
         },
-      });
-    }
+      },
+    });
 
-    return res.status(200).json({ message: 'Quote created successfully', quoteId: quote.id });
+    res.status(200).json({ message: 'Quote saved successfully', quoteId: createdQuote.id });
   } catch (err) {
-    console.error('Error in /api/submit:', err);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Submit error:', err);
+    res.status(500).json({ message: 'Failed to save quote' });
   }
 }
