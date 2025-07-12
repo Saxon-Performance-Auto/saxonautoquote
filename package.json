@@ -8,6 +8,7 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@flydotio/litestream": "^1.0.1",
     "@prisma/client": "^6.11.1",
     "next": "latest",
     "pdfkit": "^0.13.0",
@@ -17,8 +18,12 @@
     "signature_pad": "^5.0.10"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
     "@types/node": "^22.15.29",
     "prisma": "^6.11.1",
     "typescript": "^5.0.0"
+  },
+  "dockerfile": {
+    "litestream": true
   }
 }

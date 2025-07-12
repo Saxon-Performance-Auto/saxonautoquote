@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for autorepair-quote-app on 2025-06-05T00:35:34-05:00
+# fly.toml app configuration file generated for saxon-auto-quote-misty-flower-2671 on 2025-07-12T03:02:53-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'saxon-auto-quote'
+app = 'saxon-auto-quote-misty-flower-2671'
 primary_region = 'atl'
 
 [build]

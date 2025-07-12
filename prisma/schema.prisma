@@ -41,3 +41,28 @@ model Part {
   price    Float
   quote    Quote  @relation(fields: [quoteId], references: [id])
 }
+model Invoice {
+  id            Int      @id @default(autoincrement())
+  customerName  String
+  address       String
+  phone         String
+  email         String?
+  date          DateTime @default(now())
+  poNumber      String?
+  soldBy        String?
+  paymentMethod String   // 'Cash', 'Card', or 'Check'
+  items         InvoiceItem[]
+  subtotal      Float
+  tax           Float
+  total         Float
+  signature     String?  // base64-encoded image
+}
+
+model InvoiceItem {
+  id         Int     @id @default(autoincrement())
+  invoiceId  Int
+  qty        Int
+  description String
+  amount     Float
+  invoice    Invoice @relation(fields: [invoiceId], references: [id])
+}
