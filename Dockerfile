@@ -20,9 +20,5 @@ RUN npm run build
 # Expose port
 EXPOSE 3000
 
-# Healthcheck for Fly.io
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3000 || exit 1
-
 # Start with next start (optimized for production)
 CMD ["npx", "next", "start"]
