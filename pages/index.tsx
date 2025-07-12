@@ -1,58 +1,31 @@
 // pages/index.tsx
-import Image from 'next/image';
 import Link from 'next/link';
 
-export default function DashboardHome() {
+export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
-      {/* Centered Logo */}
-      <Image src="/saxonlogo.png" alt="Saxon Logo" width={160} height={160} className="mb-6" />
+    <div className="flex flex-col items-center justify-center space-y-6 text-center">
+      <img src="/saxonlogo.png" alt="Saxon Logo" className="w-32 h-32" />
+      <h1 className="text-3xl font-bold text-red-700">Saxon Auto Quotes</h1>
 
-      <h1 className="text-3xl font-bold mb-10 text-center">Saxon Auto Quotes</h1>
-
-      {/* Action Buttons Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-4xl">
-        {/* NEW Column */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-md mt-6">
         <div>
-          <h2 className="text-xl font-semibold mb-4 text-center">➕ New</h2>
-          <div className="space-y-3">
-            <Link href="/quote">
-              <button className="w-full bg-blue-600 text-white py-2 rounded">New Quote</button>
-            </Link>
-            <Link href="/new/invoice">
-              <button className="w-full bg-blue-600 text-white py-2 rounded">New Invoice</button>
-            </Link>
-            <Link href="/new/contact">
-              <button className="w-full bg-blue-600 text-white py-2 rounded">New Contact</button>
-            </Link>
-            <Link href="/new/request">
-              <button className="w-full bg-blue-600 text-white py-2 rounded">Service Request</button>
-            </Link>
-            <Link href="/new/part">
-              <button className="w-full bg-blue-600 text-white py-2 rounded">Add Part / Price</button>
-            </Link>
+          <h2 className="text-xl font-semibold mb-2">New</h2>
+          <div className="flex flex-col space-y-2">
+            <Link href="/quote" className="bg-blue-600 text-white py-2 rounded text-center">New Quote</Link>
+            <Link href="/new/invoice" className="bg-blue-600 text-white py-2 rounded text-center">New Invoice</Link>
+            <Link href="/new/request" className="bg-blue-600 text-white py-2 rounded text-center">Service Request</Link>
+            <Link href="/new/contact" className="bg-blue-600 text-white py-2 rounded text-center">Add Contact</Link>
+            <Link href="/new/part" className="bg-blue-600 text-white py-2 rounded text-center">New Part Entry</Link>
           </div>
         </div>
-
-        {/* EXISTING Column */}
         <div>
-          <h2 className="text-xl font-semibold mb-4 text-center">📁 Existing</h2>
-          <div className="space-y-3">
-            <Link href="/search/quotes">
-              <button className="w-full bg-gray-700 text-white py-2 rounded">View Quotes</button>
-            </Link>
-            <Link href="/search/invoices">
-              <button className="w-full bg-gray-700 text-white py-2 rounded">View Invoices</button>
-            </Link>
-            <Link href="/search/contacts">
-              <button className="w-full bg-gray-700 text-white py-2 rounded">Search Contacts</button>
-            </Link>
-            <Link href="/search/requests">
-              <button className="w-full bg-gray-700 text-white py-2 rounded">View Requests</button>
-            </Link>
-            <Link href="/search/parts">
-              <button className="w-full bg-gray-700 text-white py-2 rounded">Lookup Part / Price</button>
-            </Link>
+          <h2 className="text-xl font-semibold mb-2">Search</h2>
+          <div className="flex flex-col space-y-2">
+            <Link href="/search/quotes" className="bg-gray-700 text-white py-2 rounded text-center">Search Quotes</Link>
+            <Link href="/search/invoices" className="bg-gray-700 text-white py-2 rounded text-center">Search Invoices</Link>
+            <Link href="/search/requests" className="bg-gray-700 text-white py-2 rounded text-center">Search Requests</Link>
+            <Link href="/search/contacts" className="bg-gray-700 text-white py-2 rounded text-center">Search Contacts</Link>
+            <Link href="/search/parts" className="bg-gray-700 text-white py-2 rounded text-center">Search Parts</Link>
           </div>
         </div>
       </div>

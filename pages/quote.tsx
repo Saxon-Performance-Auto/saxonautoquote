@@ -36,7 +36,12 @@ export default function QuoteFormPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = { customer, quote, parts };
+
+    const payload = {
+      customer,
+      quote,
+      parts
+    };
 
     const res = await fetch('/api/submit', {
       method: 'POST',
@@ -49,28 +54,30 @@ export default function QuoteFormPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-center">Auto Repair Quote</h1>
+    <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <h1 className="text-2xl font-bold text-center">Create Auto Repair Quote</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Customer Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input name="name" placeholder="Customer Name" className="border p-2" onChange={handleCustomerChange} />
-          <input name="phone" placeholder="Phone Number" className="border p-2" onChange={handleCustomerChange} />
-          <input name="email" placeholder="Email" className="border p-2" onChange={handleCustomerChange} />
-          <input name="vehicle" placeholder="Vehicle Info" className="border p-2" onChange={handleCustomerChange} />
-          <input name="vin" placeholder="VIN" className="border p-2" onChange={handleCustomerChange} />
-          <input name="mileageIn" placeholder="Mileage In" className="border p-2" onChange={handleCustomerChange} />
-          <input name="mileageOut" placeholder="Mileage Out" className="border p-2" onChange={handleCustomerChange} />
+          <input name="name" placeholder="Customer Name" onChange={handleCustomerChange} />
+          <input name="phone" placeholder="Phone Number" onChange={handleCustomerChange} />
+          <input name="email" placeholder="Email" onChange={handleCustomerChange} />
+          <input name="vehicle" placeholder="Vehicle Info" onChange={handleCustomerChange} />
+          <input name="vin" placeholder="VIN" onChange={handleCustomerChange} />
+          <input name="mileageIn" placeholder="Mileage In" onChange={handleCustomerChange} />
+          <input name="mileageOut" placeholder="Mileage Out" onChange={handleCustomerChange} />
         </div>
 
         {/* Job / Diagnosis */}
-        <textarea name="jobDescription" placeholder="Job Description" className="border p-2 w-full min-h-[80px]" onChange={handleQuoteChange} />
+        <textarea name="jobDescription" placeholder="Job Description" onChange={handleQuoteChange} className="min-h-[100px]" />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <textarea name="inspection" placeholder="Inspection Results" className="border p-2 w-full min-h-[60px]" onChange={handleQuoteChange} />
-          <textarea name="diagnostics" placeholder="Diagnostic Summary" className="border p-2 w-full min-h-[60px]" onChange={handleQuoteChange} />
+          <textarea name="inspection" placeholder="Inspection Results" onChange={handleQuoteChange} className="min-h-[60px]" />
+          <textarea name="diagnostics" placeholder="Diagnostic Summary" onChange={handleQuoteChange} className="min-h-[60px]" />
         </div>
-        <textarea name="notes" placeholder="Additional Notes" className="border p-2 w-full min-h-[60px]" onChange={handleQuoteChange} />
+
+        <textarea name="notes" placeholder="Additional Notes" onChange={handleQuoteChange} className="min-h-[60px]" />
 
         {/* Parts Table */}
         <div>
@@ -79,13 +86,11 @@ export default function QuoteFormPage() {
             {parts.map((p, i) => (
               <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <input
-                  className="border p-2"
                   placeholder="Part Name"
                   value={p.name}
                   onChange={(e) => handlePartChange(i, 'name', e.target.value)}
                 />
                 <input
-                  className="border p-2"
                   placeholder="Price"
                   type="number"
                   value={p.price}
@@ -97,19 +102,13 @@ export default function QuoteFormPage() {
           </div>
         </div>
 
-        {/* Totals + Signature */}
+        {/* Totals / Signature */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input name="laborCost" placeholder="Labor Cost" className="border p-2" onChange={handleQuoteChange} />
-          <input name="totalCost" placeholder="Total Estimate" className="border p-2" onChange={handleQuoteChange} />
+          <input name="laborCost" placeholder="Labor Cost" onChange={handleQuoteChange} />
+          <input name="totalCost" placeholder="Total Estimate" onChange={handleQuoteChange} />
         </div>
 
-        {/* Signature Pad */}
-        <div className="my-4">
-          <p className="font-semibold mb-2">Customer Signature</p>
-          <SignaturePad
-            onChange={(sig) => setQuote(prev => ({ ...prev, signature: sig }))}
-          />
-        </div>
+        <SignaturePad onChange={(sig) => setQuote(prev => ({ ...prev, signature: sig }))} />
 
         <button type="submit" className="bg-blue-700 text-white px-6 py-2 rounded mt-4">Submit Quote</button>
       </form>

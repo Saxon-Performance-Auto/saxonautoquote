@@ -1,3 +1,12 @@
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input, textarea, button {
+  @apply w-full rounded border border-gray-300 p-2 text-sm;
+}
+
 @media print {
   button, .no-print {
     display: none !important;
