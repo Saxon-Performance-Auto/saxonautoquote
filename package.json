@@ -1,0 +1,31 @@
+{
+  "name": "saxon-auto-quote",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prisma": "prisma"
+  },
+  "dependencies": {
+    "@flydotio/litestream": "^1.0.1",
+    "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^6.11.1",
+    "next": "^15.3.5",
+    "pdfkit": "^0.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-signature-canvas": "^1.1.0-alpha.2",
+    "signature_pad": "^5.0.10"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.74",
+    "prisma": "^6.11.1",
+    "typescript": "^5.4.5"
+  },
+  "dockerfile": {
+    "litestream": true
+  }
+}
