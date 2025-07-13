@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 import type { Quote, Customer, Part } from './types';
+=======
+import { Quote, Customer, Part } from '@prisma/client';
+>>>>>>> 24386c5 (added files)
 import PDFDocument from 'pdfkit';
 import { NextApiResponse } from 'next';
 import fs from 'fs';
