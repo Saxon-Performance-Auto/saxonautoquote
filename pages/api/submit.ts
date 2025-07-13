@@ -1,12 +1,44 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
+type CustomerInput = {
+  name: string;
+  phone: string;
+  email: string;
+  vehicle: string;
+  vin: string;
+  mileageIn: string;
+  mileageOut: string;
+};
+
+type QuoteInput = {
+  jobDescription: string;
+  inspection: string;
+  diagnostics: string;
+  notes: string;
+  laborCost: string;
+  totalCost: string;
+  signature: string;
+};
+
+type PartInput = {
+  name: string;
+  price: string;
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
   try {
-    const { customer, quote, parts } = req.body;
+    const { customer, quote, parts }: {
+      customer: CustomerInput;
+      quote: QuoteInput;
+      parts: PartInput[];
+    } = req.body;
 
     const createdCustomer = await prisma.customer.create({
       data: {
@@ -27,13 +59,13 @@ export default async function handler(req, res) {
         inspection: quote.inspection,
         diagnostics: quote.diagnostics,
         notes: quote.notes,
-        laborCost: parseFloat(quote.laborCost || 0),
-        totalCost: parseFloat(quote.totalCost || 0),
+        laborCost: parseFloat(quote.laborCost || '0'),
+        totalCost: parseFloat(quote.totalCost || '0'),
         signature: quote.signature,
         parts: {
-          create: parts.map(p => ({
+          create: parts.map((p: PartInput) => ({
             name: p.name,
-            price: parseFloat(p.price || 0),
+            price: parseFloat(p.price || '0'),
           })),
         },
       },

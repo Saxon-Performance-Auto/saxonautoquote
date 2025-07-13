@@ -1,4 +1,3 @@
-// pages/quote.tsx
 import { useState } from 'react';
 import SignaturePad from '../components/SignaturePad';
 
