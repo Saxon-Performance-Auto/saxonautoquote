@@ -1,12 +1,20 @@
-/* styles/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-input, textarea, button {
-  @apply w-full rounded border border-gray-300 p-2 text-sm;
+body {
+  @apply bg-gray-50 text-gray-900;
 }
 
+input, textarea {
+  @apply border border-gray-300 rounded p-2 w-full;
+}
+
+button {
+  @apply px-4 py-2 rounded;
+}
+
+/* Print styling */
 @media print {
   button, .no-print {
     display: none !important;
