@@ -27,7 +27,7 @@ export default async function generatePDF(
   doc.moveDown();
 
   doc.fontSize(14).text('Job Description');
-  doc.fontSize(12).text(quote.jobDescription);
+  doc.fontSize(12).text(quote.job_description);
   doc.moveDown();
 
   doc.fontSize(14).text('Parts');
