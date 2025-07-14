@@ -44,8 +44,8 @@ model Part {
   id       Int    @id @default(autoincrement())
   quoteId  Int
   quote    Quote  @relation(fields: [quoteId], references: [id])
-  name     String
-  price    Float
+  name     String @map("part_name")
+  price    Float  @map("part_price")
 }
 
 model Invoice {
