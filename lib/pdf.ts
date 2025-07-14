@@ -1,7 +1,7 @@
 
 import type { Quote, Customer, Part } from './types';
 import PDFDocument from 'pdfkit';
-import { NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 
