@@ -1,15 +1,7 @@
 [build]
-  command = "npx prisma generate && npm run build"
-  publish = "out"
-
-[dev]
-  command = "npm run dev"
+  command = "npm run build"
+  publish = ".next"
 
 [build.environment]
   NPM_FLAGS = "--force"
   PRISMA_GENERATE_SKIP_AUTOINSTALL = "true"
-
-[cache]
-  # Disable caching node_modules so Prisma isn't stale
-  paths = []
-
