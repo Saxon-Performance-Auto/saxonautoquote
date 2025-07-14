@@ -8,8 +8,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetch('/api/quotes')
-      .then(res => res.json())
-      .then(data => setQuotes(data));
+      .then((res) => res.json())
+      .then((data) => setQuotes(data));
   }, []);
 
   return (
@@ -35,8 +35,10 @@ export default function AdminDashboard() {
                 <td className="border px-4 py-2">{q.customer.name}</td>
                 <td className="border px-4 py-2">{q.customer.phone}</td>
                 <td className="border px-4 py-2">{q.customer.vehicle}</td>
-                <td className="border px-4 py-2">${q.total_cost.toFixed(2)}</td>
-                <td className="border px-4 py-2">{new Date(q.createdAt).toLocaleDateString()}</td>
+                <td className="border px-4 py-2">${q.totalCost.toFixed(2)}</td>
+                <td className="border px-4 py-2">
+                  {new Date(q.createdAt).toLocaleDateString()}
+                </td>
                 <td className="border px-4 py-2">
                   <a
                     href={`/api/generate-invoice?id=${q.id}`}
