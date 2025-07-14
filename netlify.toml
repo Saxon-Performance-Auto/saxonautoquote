@@ -1,6 +1,9 @@
 [build]
   command = "npx prisma generate && npm run build"
-  publish = ".next"
+  publish = "out"
+
+[dev]
+  command = "npm run dev"
 
 [build.environment]
   NPM_FLAGS = "--force"
