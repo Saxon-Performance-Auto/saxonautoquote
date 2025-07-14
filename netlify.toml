@@ -1,7 +1,9 @@
 [build]
-  command = "npm run build"
+  command = "npx prisma generate && npm run build"
   publish = ".next"
 
 [build.environment]
   NPM_FLAGS = "--force"
   PRISMA_GENERATE_SKIP_AUTOINSTALL = "true"
+  PRISMA_CLI_QUERY_ENGINE_TYPE = "binary"
+  PRISMA_CLI_QUERY_ENGINE_LIBRARY = "libquery_engine-debian-openssl-3.0.x.so.node"
