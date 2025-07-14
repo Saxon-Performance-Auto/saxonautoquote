@@ -1,5 +1,3 @@
-// pages/invoices/[invoiceId]/print.tsx
-
 export default function InvoicePrintPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto">

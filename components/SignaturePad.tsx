@@ -9,3 +9,4 @@ const SignaturePad = forwardRef<ReactSignatureCanvas, any>((props, ref) => {
 SignaturePad.displayName = 'SignaturePad';
 
 export default SignaturePad;
+

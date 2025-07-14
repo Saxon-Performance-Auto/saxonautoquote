@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { PrismaClient } from '@prisma/client';
-import { GetServerSideProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import SignaturePad from '../../../components/SignaturePad';
 import { useRef } from 'react';
 

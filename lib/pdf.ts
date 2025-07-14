@@ -52,3 +52,4 @@ export default async function generatePDF(
   const fileBuffer = fs.readFileSync(filePath);
   res.send(fileBuffer);
 }
+

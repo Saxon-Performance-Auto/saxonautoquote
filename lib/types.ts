@@ -8,11 +8,13 @@ export type Quote = {
 };
 
 export type Customer = {
-  id: string;
   name: string;
   phone: string;
   email: string;
   vehicle: string;
+  vin: string; ?
+  mileageIn: string;
+  mileageOut: string;
 };
 
 export type Part = {
@@ -21,3 +23,4 @@ export type Part = {
   part_name: string;
   part_price: number;
 };
+
