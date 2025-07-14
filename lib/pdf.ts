@@ -32,7 +32,7 @@ export default async function generatePDF(
 
   doc.fontSize(14).text('Parts');
   parts.forEach((part) => {
-    doc.fontSize(12).text(`${part.name} - $${part.price.toFixed(2)}`);
+    doc.fontSize(12).text(`${part.partName} - $${part.price.toFixed(2)}`);
   });
   doc.moveDown();
 
@@ -52,4 +52,3 @@ export default async function generatePDF(
   const fileBuffer = fs.readFileSync(filePath);
   res.send(fileBuffer);
 }
-
