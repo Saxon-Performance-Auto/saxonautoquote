@@ -1,11 +1,9 @@
-import Image from 'next/image';
-
 export default function Header() {
   return (
-    <header className="bg-white border-b shadow-sm p-4 text-center flex flex-col items-center space-y-2 md:flex-row md:justify-between md:space-y-0 md:px-8">
-      <div className="flex items-center space-x-4">
-        <Image src="/saxonlogo.png" alt="Saxon Logo" width={60} height={60} />
-        <span className="text-2xl font-bold text-red-700">Saxon Performance Auto</span>
+    <header className="bg-red-700 text-white py-4 px-6 shadow-md mb-6">
+      <div className="max-w-6xl mx-auto flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Saxon Performance Automotive</h1>
+        <span className="text-sm">Mobile Mechanic & Diagnostic Quotes</span>
       </div>
     </header>
   );

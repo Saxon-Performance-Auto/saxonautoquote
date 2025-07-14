@@ -1,4 +1,4 @@
-can you generator client {
+generator client {
   provider = "prisma-client-js"
 }
 
@@ -8,20 +8,24 @@ datasource db {
 }
 
 model Customer {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   phone       String
   email       String?
   vehicle     String
-  vin         String?    // NEW
-  mileageIn   String?    // NEW
-  mileageOut  String?    // NEW
+  vin         String?
+  mileageIn   String?
+  mileageOut  String?
   quotes      Quote[]
+  invoices    Invoice[]
+  requests    Request[]
+  createdAt   DateTime  @default(now())
 }
 
 model Quote {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   customerId     Int
+  customer       Customer  @relation(fields: [customerId], references: [id])
   jobDescription String
   laborCost      Float
   totalCost      Float
@@ -29,40 +33,60 @@ model Quote {
   diagnostics    String?
   notes          String?
   signature      String?
-  createdAt      DateTime @default(now())
-  customer       Customer @relation(fields: [customerId], references: [id])
+  createdAt      DateTime  @default(now())
   parts          Part[]
+  invoice        Invoice?  @relation("QuoteToInvoice")
+  invoiceId      Int?      @unique
 }
+
 
 model Part {
   id       Int    @id @default(autoincrement())
   quoteId  Int
+  quote    Quote  @relation(fields: [quoteId], references: [id])
   name     String
   price    Float
-  quote    Quote  @relation(fields: [quoteId], references: [id])
 }
+
 model Invoice {
-  id            Int      @id @default(autoincrement())
-  customerName  String
-  address       String
-  phone         String
-  email         String?
-  date          DateTime @default(now())
-  poNumber      String?
+  id            Int           @id @default(autoincrement())
+  customerId    Int
+  quoteId       Int?          @unique
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  quote         Quote?        @relation("QuoteToInvoice", fields: [quoteId], references: [id])
+  date          DateTime      @default(now())
+  paymentMethod String
   soldBy        String?
-  paymentMethod String   // 'Cash', 'Card', or 'Check'
-  items         InvoiceItem[]
+  poNumber      String?
+  address       String?
   subtotal      Float
   tax           Float
   total         Float
-  signature     String?  // base64-encoded image
+  signature     String?
+  items         InvoiceItem[]
 }
 
 model InvoiceItem {
-  id         Int     @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   invoiceId  Int
+  invoice    Invoice  @relation(fields: [invoiceId], references: [id])
   qty        Int
   description String
   amount     Float
-  invoice    Invoice @relation(fields: [invoiceId], references: [id])
+}
+
+model Request {
+  id          Int      @id @default(autoincrement())
+  customerId  Int
+  customer    Customer @relation(fields: [customerId], references: [id])
+  requestDate DateTime @default(now())
+  description String
+  status      String   @default("Pending")
+  notes       String?
+}
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  passwordHash String
+  isAdmin      Boolean @default(false)
 }

@@ -1,9 +1,16 @@
-# .gitignore
-node_modules/
-.next/
-*.log
+# dependencies
+/node_modules
+
+# next.js
+/.next
+/out
+
+# database
+/prisma/dev.db
+
+# env
 .env
+
+# misc
 .DS_Store
-*.swp
-*.tmp
-*.bak
+npm-debug.log*
