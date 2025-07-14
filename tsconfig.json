@@ -20,7 +20,7 @@
     "jsx": "preserve",
     "types": ["node", "next"],
     "incremental": true,
-	"verbatimModuleSyntax": true
+	"verbatimModuleSyntax": false
   },
   "include": [
     "types",

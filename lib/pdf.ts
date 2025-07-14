@@ -1,56 +1,54 @@
-
+import type { NextApiResponse } from 'next';
 import type { Quote, Customer, Part } from './types';
 import PDFDocument from 'pdfkit';
-import type { NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 
-export async function generateInvoicePDF(
+export default async function generatePDF(
   res: NextApiResponse,
-  customer: Customer,
   quote: Quote,
+  customer: Customer,
   parts: Part[]
 ) {
-  const doc = new PDFDocument({ margin: 50 });
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'inline; filename="invoice.pdf"');
-  doc.pipe(res);
+  const doc = new PDFDocument();
+  const filePath = path.join(process.cwd(), 'public', `quote-${quote.id}.pdf`);
+  doc.pipe(fs.createWriteStream(filePath));
 
-  const logoPath = path.join(process.cwd(), 'public', 'saxonlogo.png');
-  if (fs.existsSync(logoPath)) {
-    doc.image(logoPath, { width: 120, align: 'center' });
+  doc.fontSize(20).text('Quote Summary', { underline: true });
+  doc.moveDown();
+
+  doc.fontSize(12).text(`Customer: ${customer.name}`);
+  doc.text(`Phone: ${customer.phone}`);
+  doc.text(`Email: ${customer.email || ''}`);
+  doc.text(`Vehicle: ${customer.vehicle}`);
+  doc.text(`VIN: ${customer.vin || ''}`);
+  doc.text(`Mileage In: ${customer.mileageIn || ''}`);
+  doc.text(`Mileage Out: ${customer.mileageOut || ''}`);
+  doc.moveDown();
+
+  doc.fontSize(14).text('Job Description');
+  doc.fontSize(12).text(quote.jobDescription);
+  doc.moveDown();
+
+  doc.fontSize(14).text('Parts');
+  parts.forEach((part) => {
+    doc.fontSize(12).text(`${part.name} - $${part.price.toFixed(2)}`);
+  });
+  doc.moveDown();
+
+  doc.fontSize(12).text(`Labor Cost: $${quote.laborCost.toFixed(2)}`);
+  doc.fontSize(12).text(`Total Cost: $${quote.totalCost.toFixed(2)}`);
+  doc.moveDown();
+
+  if (quote.notes) {
+    doc.fontSize(14).text('Notes');
+    doc.fontSize(12).text(quote.notes);
   }
 
-  doc.moveDown();
-  doc.fontSize(20).fillColor('#C8102E').text('SAXON PERFORMANCE AUTO', { align: 'center' });
-  doc.fontSize(12).fillColor('#000').text('Mobile Mechanic & Diagnostics', { align: 'center' });
-  doc.moveDown().moveDown();
-
-  doc.fontSize(12).text(`Date: ${new Date(quote.createdAt).toLocaleDateString()}`);
-  doc.text(`Customer: ${customer.name}`);
-  doc.text(`Phone: ${customer.phone}`);
-  doc.text(`Email: ${customer.email}`);
-  doc.text(`Vehicle: ${customer.vehicle}`);
-  doc.moveDown();
-
-  doc.fontSize(14).fillColor('#000').text('Job Description');
-  doc.fontSize(12).text(quote.job_description);
-  doc.moveDown();
-
-  doc.fontSize(14).fillColor('#000').text('Parts');
-  parts.forEach(part => {
-    doc.text(`- ${part.part_name}: $${part.part_price.toFixed(2)}`);
-  });
-
-  const partsTotal = parts.reduce((sum, part) => sum + part.part_price, 0);
-  const totalCost = partsTotal + quote.labor_cost;
-
-  doc.moveDown();
-  doc.text(`Labor: $${quote.labor_cost.toFixed(2)}`);
-  doc.fontSize(14).fillColor('#C8102E').text(`Total Estimate: $${totalCost.toFixed(2)}`, { align: 'right' });
-
-  doc.moveDown().moveDown();
-  doc.fontSize(10).fillColor('#555').text('Note: This is a preliminary quote. Final pricing may vary.');
-
   doc.end();
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename=quote-${quote.id}.pdf`);
+  const fileBuffer = fs.readFileSync(filePath);
+  res.send(fileBuffer);
 }
