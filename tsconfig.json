@@ -19,7 +19,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "types": ["node", "next"],
-    "incremental": true
+    "incremental": true,
+	"verbatimModuleSyntax": true
   },
   "include": [
     "types",
