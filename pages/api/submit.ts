@@ -3,42 +3,11 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-type CustomerInput = {
-  name: string;
-  phone: string;
-  email: string;
-  vehicle: string;
-  vin: string;
-  mileageIn: string;
-  mileageOut: string;
-};
-
-type QuoteInput = {
-  jobDescription: string;
-  inspection: string;
-  diagnostics: string;
-  notes: string;
-  laborCost: string;
-  totalCost: string;
-  signature: string;
-};
-
-type PartInput = {
-  name: string;
-  price: string;
-};
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
 
   try {
-    const { customer, quote, parts }: {
-      customer: CustomerInput;
-      quote: QuoteInput;
-      parts: PartInput[];
-    } = req.body;
+    const { customer, quote, parts } = req.body;
 
     const createdCustomer = await prisma.customer.create({
       data: {
@@ -63,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         totalCost: parseFloat(quote.totalCost || '0'),
         signature: quote.signature,
         parts: {
-          create: parts.map((p: PartInput) => ({
+          create: parts.map((p: any) => ({
             name: p.name,
             price: parseFloat(p.price || '0'),
           })),
@@ -73,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json({ message: 'Quote saved successfully', quoteId: createdQuote.id });
   } catch (err) {
-    console.error('Submit error:', err);
-    res.status(500).json({ message: 'Failed to save quote' });
+    console.error('Error submitting quote:', err);
+    res.status(500).json({ message: 'Error saving quote' });
   }
 }
