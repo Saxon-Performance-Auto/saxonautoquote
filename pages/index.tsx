@@ -21,10 +21,10 @@ export default function QuoteForm() {
     setQuote(prev => ({ ...prev, [name]: value }));
   };
 
-  const handlePartChange = (index: number, key: string, value: string | number) => {
-    const newParts = [...parts];
-    newParts[index][key as 'name' | 'price'] = value;
-    setParts(newParts);
+   const handlePartChange = (index: number, key: 'name' | 'price', value: string | number) => {
+	 const newParts = [...parts];
+	 newParts[index][key] = String(value); // Convert to string for consistency
+	 setParts(newParts);
   };
 
   const addPart = () => {
